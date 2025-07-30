@@ -56,7 +56,7 @@ def id_to_fips(id_str):
 
 @st.cache_data(ttl=3600)
 def load_weather_data():
-    # Replace these paths with your CSV file locations or upload via Streamlit file uploader
+
     precip = pd.read_csv("avg_prec.csv")
     temp = pd.read_csv("avg_temp.csv")
 
@@ -70,8 +70,8 @@ def load_weather_data():
 
 def calculate_scores(df):
     # Fill missing weather values with median
-    df['avg_precipitation'] = df['avg_precipitation'].fillna(df['avg_precipitation'].median())
-    df['avg_temperature'] = df['avg_temperature'].fillna(df['avg_temperature'].median())
+    # df['avg_precipitation'] = df['avg_precipitation'].fillna(df['avg_precipitation'].median())
+    # df['avg_temperature'] = df['avg_temperature'].fillna(df['avg_temperature'].median())
 
     df["home_age"] = 2025 - df["median_year_built"]
     df["adj_population"] = df["total_population"] * df["sf_ratio"]
@@ -113,7 +113,6 @@ def main():
     # Load data
     API_KEY = st.secrets["CENSUS_API_KEY"]
 
-# force
     if not API_KEY:
         st.warning("Please enter a Census API key to proceed.")
         return
@@ -162,7 +161,7 @@ def main():
 
     st.dataframe(filtered_df[['NAME', 'median_household_income', 'home_age', 'sf_ratio', 'pest_sales_score']].sort_values('pest_sales_score', ascending=False).head(10))
 
-    # Plot choropleth map
+    # Plot map
     geojson_url = 'https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'
 
     fig = px.choropleth(
